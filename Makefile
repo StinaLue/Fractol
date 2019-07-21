@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = fdf
+NAME = fractol
 
 CC = gcc
 FLAGS = -Wall -Werror -Wextra -O3
@@ -25,24 +25,14 @@ MINILIBX = $(MINILIBX_DIRECTORY)libmlx.a
 MINILIBX_DIRECTORY = ./minilibx_macos/
 MINILIBX_HEADERS = $(MINILIBX_DIRECTORY)
 
-HEADERS_LIST = fdf.h\
-			   keys_and_mouse.h
+HEADERS_LIST = fractol.h
+
 HEADERS_DIRECTORY = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIRECTORY), $(HEADERS_LIST))
 
 SOURCES_DIRECTORY = ./src/
-SOURCES_LIST = colors.c\
-			   control.c\
-			   draw_line.c\
-			   error.c\
-			   init.c\
-			   key_events.c\
-			   main.c\
-			   menu.c\
-			   reader.c\
-			   tracing_iso.c\
-			   tracing_par.c\
-			   utils.c
+SOURCES_LIST = main.c
+
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
 
 OBJECTS_DIRECTORY = objects/
