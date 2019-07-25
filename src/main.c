@@ -1,11 +1,11 @@
 #include "fractol.h"
 
-void	fill_pix(int x, int y, t_fractol *fractol)
+void	fill_pix(int x, int y, t_fractol *fractol, int color)
 {
 	if ((x + y * WIN_WIDTH) < (WIN_WIDTH * WIN_HEIGHT) &&
 			(x + y * WIN_WIDTH) > 0 && x < WIN_WIDTH && x > 0)
 	{
-		fractol->img.data[x + y * WIN_WIDTH] = 0xFFFFFF;
+		fractol->img.data[x + y * WIN_WIDTH] = color;
 	}
 }
 /*
@@ -19,13 +19,29 @@ void		trace_fractal(t_fractol *fractol)
 {
 	int i;
 	int j;
+	int color;
+	int count;
 
+	color = 0xFF;
 	i = 0;
-	j = 500;
-	while (i < 500)
+	j = 0;
+	count = 0;
+	while (j < WIN_HEIGHT)
 	{
-		fill_pix(i, j, fractol);
-		i++;
+		while (i < WIN_WIDTH)
+		{
+			while (count <= WIN_WIDTH / 255)
+			{
+			fill_pix(i, j, fractol, color);
+			count++;
+			i++;
+			}
+			color += 0xff;
+			count = 0;
+		}
+		color = 0xFF;
+		i = 0;
+		j++;
 	}
 }
 
@@ -35,7 +51,7 @@ int		main(int argc, char **argv)
 
 	if (argc != 2)
 	{
-		ft_printf("usage: ./fractol %s\n", "[choice of fractal]");
+		ft_printf("usage: ./fractol %{b}s\n", "[choice of fractal]");
 		return (1);
 	}
 	if ((fractol.mlx.mlx_ptr = mlx_init()) == NULL)
