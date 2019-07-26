@@ -1,4 +1,45 @@
+#include <stdio.h>
+
 #include "fractol.h"
+#include <math.h>
+#define RE_START -2.05
+#define RE_END 1
+#define IM_START -1.3
+#define IM_END 1
+
+#define ZOOM 300
+
+double	real_part(double a, double b)
+{
+	return (a * a - b * b);
+}
+
+double	imaginary_part(double a, double b)
+{
+	return (2 * a * b);
+}
+
+int	mandelbrot(double rpart, double ipart)
+{
+	double zx;
+	double zy;
+	int n;
+	double tempx;
+
+	n = 0;
+	zx = 0.0;
+	zy = 0.0;
+	while ((zx * zx) + (zy * zy) < 4 && n < 100)
+	{
+		tempx = zx;
+		zx = zx * zx - zy * zy + rpart;
+		zy = 2 * zx * zy + ipart;
+		zy = 2 * zy * tempx + ipart;
+		//printf("zx = %f and zy = %f\n", zx, zy);
+		n++;
+	}
+	return (n);
+}
 
 void	fill_pix(int x, int y, t_fractol *fractol, int color)
 {
@@ -17,6 +58,32 @@ void	keys_and_mouse(t_fractol *fractol)
 */
 void		trace_fractal(t_fractol *fractol)
 {
+	double i;
+	double j;
+	double rlpart;
+	double impart;
+	int m;
+	int color;
+
+	i = 0;
+	while (i < WIN_WIDTH)
+	{
+		rlpart = i / ZOOM + RE_START;
+		j = 0;
+		while (j < WIN_HEIGHT)
+		{
+			impart = j / ZOOM + IM_START;
+			//printf("rlpart = %f and impart = %f\n", rlpart, impart);
+			m = mandelbrot(rlpart, impart);
+			//printf("m = %d\n", m);
+			color = 255 - (m * 255 / 100);
+			fill_pix(i, j, fractol, color);
+			//fill_pix(i, j, fractol, m == 100 ? 0x000000 : 0xFFFFFF);
+			j++;
+		}
+		i++;
+	}
+	/*
 	int i;
 	int j;
 	int color;
@@ -43,6 +110,7 @@ void		trace_fractal(t_fractol *fractol)
 		i = 0;
 		j++;
 	}
+	*/
 }
 
 int		main(int argc, char **argv)
