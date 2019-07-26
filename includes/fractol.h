@@ -25,6 +25,11 @@ typedef struct		s_fractol
 {
 	t_mlx		mlx;
 	t_img		img;
+	int		itmax;
+	int		color;
+	double		zoom;
+	double		realstart;
+	double		imstart;
 }			t_fractol;
 
 #endif
