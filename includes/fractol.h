@@ -32,6 +32,8 @@ typedef struct		s_fractol
 	double		imstart;
 	double		realpart;
 	double		impart;
+	int		julia_mouse;
+	int		frac;
 }			t_fractol;
 
 #endif

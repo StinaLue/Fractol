@@ -6,6 +6,10 @@
 #include "libft.h"
 #define RE_START -2.05
 #define IM_START -1.3
+#define JULIA 1
+#define MANDELBROT 2
+#define BURNING_SHIP 3
+#define BUFFALO 4
 
 void	trace_fractal(t_fractol *fractol);
 
@@ -52,7 +56,8 @@ void	zoom(int x, int y, t_fractol *fractol)
 	destroy_and_clear(fractol);
 	if (key == W)
 	{
-		fractol->realstart = fractol->zoom += 100;
+		fractol
+		fractol->julia_mouse = !fractol->julia_mouse;->realstart = fractol->zoom += 100;
 		//fractol->realstart += fractol->realstart / fractol->zoom;
 		//fractol->imstart += fractol->imstart / fractol->zoom;
 	}
@@ -116,11 +121,32 @@ void	changecolor(int key, t_fractol *fractol)
 	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
+void	julia_trigger(int key, t_fractol *fractol)
+{
+	(void)key;
+	if (fractol->frac == JULIA)
+		fractol->julia_mouse = !fractol->julia_mouse;
+}
+
+void	choose_frac(int key, t_fractol *fractol)
+{
+	if (key == 13)
+		fractol->frac = JULIA;
+	else if (key == 14)
+		fractol->frac = MANDELBROT;
+	else if (key == 15)
+		fractol->frac = BURNING_SHIP;
+	else if (key == 16)
+		fractol->frac = BUFFALO;
+}
+
 int	key_press(int key, void *param)
 {
-	//if (key == W || key == S)
-	//	zoom(key, (t_fractol *)param);
-	if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP || key == ARROW_DOWN)
+	if (key == W)
+		julia_trigger(key, (t_fractol *)param);
+	else if (key >= 13 && key <= 25)
+		choose_frac(key, (t_fractol *)param);
+	else if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP || key == ARROW_DOWN)
 		complexchange(key, (t_fractol *)param);
 	else if (key == O || key == P)
 		itmaxchange(key, (t_fractol *)param);
@@ -170,7 +196,8 @@ void	prepare_julia(t_fractol *fractol)
 	fractol->color = 2050;
 	fractol->realpart = 0.285;
 	fractol->impart = 0.01;
-	//fractol->julia_mouse = 1;
+	fractol->julia_mouse = 1;
+	fractol->frac = JULIA;
 }
 
 double	real_part(double a, double b)
@@ -245,14 +272,14 @@ int	mandelbrot(int i, int j, t_fractol *fractol)
 
 int             mouse_julia(int x, int y, t_fractol *fractol)
 {
-	//if (fractol->fract == 1 && data->julia_mouse == 1)
-	//{
-	fractol->realpart = x * 2;
-	fractol->impart = y * 2 - 800;
-	destroy_and_clear(fractol);
-	trace_fractal(fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
-	//}
+	if (fractol->frac == JULIA && fractol->julia_mouse == 1)
+	{
+		fractol->realpart = x * 2;
+		fractol->impart = y * 2 - 800;
+		destroy_and_clear(fractol);
+		trace_fractal(fractol);
+		mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
+	}
 	return (0);
 }
 
