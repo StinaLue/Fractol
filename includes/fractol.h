@@ -30,6 +30,8 @@ typedef struct		s_fractol
 	double		zoom;
 	double		realstart;
 	double		imstart;
+	double		realpart;
+	double		impart;
 }			t_fractol;
 
 #endif

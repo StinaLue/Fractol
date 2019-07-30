@@ -3,6 +3,7 @@
 #include "fractol.h"
 #include "keys_and_mouse.h"
 #include <math.h>
+#include "libft.h"
 #define RE_START -2.05
 #define IM_START -1.3
 
@@ -40,21 +41,47 @@ void	complexchange(int key, t_fractol *fractol)
 	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
-void	zoom(int key, t_fractol *fractol)
+void	close_window(t_fractol *fractol)
+{
+	destroy_and_clear(fractol);
+	exit(0);
+}
+/*
+void	zoom(int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	if (key == W)
 	{
-		fractol->zoom += 100;
-		fractol->realstart += fractol->realstart / fractol->zoom;
-		fractol->imstart += fractol->imstart / fractol->zoom;
+		fractol->realstart = fractol->zoom += 100;
+		//fractol->realstart += fractol->realstart / fractol->zoom;
+		//fractol->imstart += fractol->imstart / fractol->zoom;
 	}
 	else if (key == S)
 	{
 		fractol->zoom -= 100;
-		fractol->realstart -= fractol->realstart / fractol->zoom;
-		fractol->imstart -= fractol->imstart / fractol->zoom;
+		//	fractol->realstart -= fractol->realstart / fractol->zoom;
+		//	fractol->imstart -= fractol->imstart / fractol->zoom;
 	}
+	trace_fractal(fractol);
+	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
+}
+*/
+void	zoom(int x, int y, t_fractol *fractol)
+{
+	destroy_and_clear(fractol);
+	fractol->realstart = (x / fractol->zoom + fractol->realstart) - (x / (fractol->zoom * 1.3));
+	fractol->imstart = (y / fractol->zoom + fractol->imstart) - (y / (fractol->zoom * 1.3));
+	fractol->zoom *= 1.3;
+	trace_fractal(fractol);
+	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
+}
+
+void	unzoom(int x, int y, t_fractol *fractol)
+{
+	destroy_and_clear(fractol);
+	fractol->realstart = (x / fractol->zoom + fractol->realstart) - (x / (fractol->zoom / 1.3));
+	fractol->imstart = (y / fractol->zoom + fractol->imstart) - (y / (fractol->zoom / 1.3));
+	fractol->zoom /= 1.3;
 	trace_fractal(fractol);
 	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
@@ -91,29 +118,59 @@ void	changecolor(int key, t_fractol *fractol)
 
 int	key_press(int key, void *param)
 {
-	if (key == W || key == S)
-		zoom(key, (t_fractol *)param);
-	else if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP || key == ARROW_DOWN)
+	//if (key == W || key == S)
+	//	zoom(key, (t_fractol *)param);
+	if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP || key == ARROW_DOWN)
 		complexchange(key, (t_fractol *)param);
 	else if (key == O || key == P)
 		itmaxchange(key, (t_fractol *)param);
 	else if	(key == N || key == M)
 		changecolor(key, (t_fractol *)param);
+	else if (key == ESC)
+		close_window((t_fractol *)param);
 	return (1);
 }
 
+int             mouse_hook(int mousecode, int x, int y, t_fractol *fractol)
+{
+	destroy_and_clear(fractol);
+	if (mousecode == 4 || mousecode == 1)
+		zoom(x, y, fractol);
+	else if (mousecode == 5 || mousecode == 2)
+		unzoom(x, y, fractol);
+	trace_fractal(fractol);
+	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
+	return (0);
+}
+
+int             mouse_julia(int x, int y, t_fractol *fractol);
+
 void	keys_and_mouse(t_fractol *fractol)
 {
+	mlx_hook(fractol->mlx.win_ptr, 6, 1L < 6, mouse_julia, fractol);
 	mlx_hook(fractol->mlx.win_ptr, 2, 0, key_press, fractol);
+	mlx_mouse_hook(fractol->mlx.win_ptr, mouse_hook, fractol);
 }
 
 void	prepare_mandel(t_fractol *fractol)
 {
 	fractol->itmax = 100;
-	fractol->zoom = 300;
-	fractol->realstart = -2.05;
-	fractol->imstart = -1.3;
+	fractol->zoom = WIN_HEIGHT / 3;
+	fractol->realstart = -2.8;
+	fractol->imstart = -1.45;
 	fractol->color = 100;
+}
+
+void	prepare_julia(t_fractol *fractol)
+{
+	fractol->itmax = 100;
+	fractol->zoom = WIN_HEIGHT / 3;
+	fractol->realstart = -2.0;
+	fractol->imstart = -1.9;
+	fractol->color = 2050;
+	fractol->realpart = 0.285;
+	fractol->impart = 0.01;
+	//fractol->julia_mouse = 1;
 }
 
 double	real_part(double a, double b)
@@ -135,7 +192,92 @@ void	fill_pix(int x, int y, t_fractol *fractol, int color)
 	}
 }
 
+int	mandeltest(int i, int j, t_fractol *fractol)
+{
+	double zx;
+	double zy;
+	int n;
+	double tempx;
+	double rlpart;
+	double impart;
+
+	n = 0;
+	zx = 0.0;
+	zy = 1.0;
+	rlpart = i / fractol->zoom + fractol->realstart;
+	impart = j / fractol->zoom + fractol->imstart;
+	while ((zx * zx) + (zy * zy) < 4 && n < fractol->itmax)
+	{
+		tempx = zx;
+		zx = zx * zx - zy * zy + rlpart;
+		zy = 2 * zy * tempx + impart;
+		n++;
+	}
+	fill_pix(i, j, fractol, n == fractol->itmax ? 0x000000 : fractol->color * n);
+	return (n);
+}
+
 int	mandelbrot(int i, int j, t_fractol *fractol)
+{
+	double zx;
+	double zy;
+	int n;
+	double tempx;
+	double realpart;
+	double impart;
+
+	n = 0;
+	zx = 0.0;
+	zy = 0.0;
+	realpart = i / fractol->zoom + fractol->realstart;
+	impart = j / fractol->zoom + fractol->imstart;
+	while ((zx * zx) + (zy * zy) < 4 && n < fractol->itmax)
+	{
+		tempx = zx;
+		zx = zx * zx - zy * zy + realpart;
+		zy = 2 * zy * tempx + impart;
+		//printf("zx = %f and zy = %f\n", zx, zy);
+		n++;
+	}
+	fill_pix(i, j, fractol, n == fractol->itmax ? 0x000000 : fractol->color * n);
+	return (n);
+}
+
+int             mouse_julia(int x, int y, t_fractol *fractol)
+{
+	//if (fractol->fract == 1 && data->julia_mouse == 1)
+	//{
+	fractol->realpart = x * 2;
+	fractol->impart = y * 2 - 800;
+	destroy_and_clear(fractol);
+	trace_fractal(fractol);
+	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
+	//}
+	return (0);
+}
+
+int	julia(int i, int j, t_fractol *fractol)
+{
+	double zx;
+	double zy;
+	int n;
+	double tempx;
+
+	n = 0;
+	zx = i / fractol->zoom + fractol->realstart;
+	zy = j / fractol->zoom + fractol->imstart;
+	while ((zx * zx) + (zy * zy) < 4 && n < fractol->itmax)
+	{
+		tempx = zx;
+		zx = zx * zx - zy * zy - 0.8 + (fractol->realpart / WIN_WIDTH);
+		zy = 2 * zy * tempx + fractol->impart / WIN_WIDTH;
+		n++;
+	}
+	fill_pix(i, j, fractol, n == fractol->itmax ? 0x000000 : fractol->color * n);
+	return (n);
+}
+
+int	buffalo(int i, int j, t_fractol *fractol)
 {
 	double zx;
 	double zy;
@@ -152,8 +294,34 @@ int	mandelbrot(int i, int j, t_fractol *fractol)
 	while ((zx * zx) + (zy * zy) < 4 && n < fractol->itmax)
 	{
 		tempx = zx;
-		zx = zx * zx - zy * zy + rlpart;
-		zy = 2 * zy * tempx + impart;
+		zx = ft_absfloat(real_part(zx, zy)) + rlpart;
+		zy = ft_absfloat(imaginary_part(zy, tempx)) + impart;
+		//printf("zx = %f and zy = %f\n", zx, zy);
+		n++;
+	}
+	fill_pix(i, j, fractol, n == fractol->itmax ? 0x000000 : fractol->color * n);
+	return (n);
+}
+
+int	burningship(int i, int j, t_fractol *fractol)
+{
+	double zx;
+	double zy;
+	int n;
+	double tempx;
+	double rlpart;
+	double impart;
+
+	n = 0;
+	zx = 0.0;
+	zy = 0.0;
+	rlpart = i / fractol->zoom + fractol->realstart;
+	impart = j / fractol->zoom + fractol->imstart;
+	while ((zx * zx) + (zy * zy) < 4 && n < fractol->itmax)
+	{
+		tempx = zx;
+		zx = real_part(ft_absfloat(zx), ft_absfloat(zy)) + rlpart;
+		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx)) + impart;
 		//printf("zx = %f and zy = %f\n", zx, zy);
 		n++;
 	}
@@ -162,12 +330,12 @@ int	mandelbrot(int i, int j, t_fractol *fractol)
 }
 
 /*
-void	keys_and_mouse(t_fractol *fractol)
-{
-	mlx_hook(fractol->mlx.win_ptr, 2, 0, key_press, fractol);
-	mlx_hook(fractol->mlx.win_ptr, 4, 0, mouse_press, fractol);
-}
-*/
+   void	keys_and_mouse(t_fractol *fractol)
+   {
+   mlx_hook(fractol->mlx.win_ptr, 2, 0, key_press, fractol);
+   mlx_hook(fractol->mlx.win_ptr, 4, 0, mouse_press, fractol);
+   }
+ */
 void		trace_fractal(t_fractol *fractol)
 {
 	double i;
@@ -181,50 +349,25 @@ void		trace_fractal(t_fractol *fractol)
 		j = 0;
 		while (j < WIN_HEIGHT)
 		{
-			//printf("rlpart = %f and impart = %f\n", rlpart, impart);
-			m = mandelbrot(i, j, fractol);
-			//printf("m = %d\n", m);
+			//m = mandelbrot(i, j, fractol);
+			m = julia(i, j, fractol);
+			//m = buffalo(i, j, fractol);
+			//m = mandeltest(i, j, fractol);
+			//m = burningship(i, j, fractol);
 			color = 255 - (m * 255 / 100);
 			//fill_pix(i, j, fractol, color);
 			j++;
 		}
 		i++;
 	}
-	/*
-	int i;
-	int j;
-	int color;
-	int count;
-
-	color = 0xFF;
-	i = 0;
-	j = 0;
-	count = 0;
-	while (j < WIN_HEIGHT)
-	{
-		while (i < WIN_WIDTH)
-		{
-			while (count <= WIN_WIDTH / 255)
-			{
-			fill_pix(i, j, fractol, color);
-			count++;
-			i++;
-			}
-			color += 0xff;
-			count = 0;
-		}
-		color = 0xFF;
-		i = 0;
-		j++;
-	}
-	*/
 }
 
 int		main(int argc, char **argv)
 {
 	t_fractol	fractol;
 
-	prepare_mandel(&fractol);
+	prepare_julia(&fractol);
+	//prepare_mandel(&fractol);
 	if (argc != 2)
 	{
 		ft_printf("usage: ./fractol %{b}s\n", "[choice of fractal]");
