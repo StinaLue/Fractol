@@ -41,7 +41,6 @@ void	complexchange(int key, t_fractol *fractol)
 		fractol->imstart -= 100 / fractol->zoom;
 	}
 	trace_fractal(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
 void	close_window(t_fractol *fractol)
@@ -77,7 +76,6 @@ void	zoom(int x, int y, t_fractol *fractol)
 	fractol->imstart = (y / fractol->zoom + fractol->imstart) - (y / (fractol->zoom * 1.3));
 	fractol->zoom *= 1.3;
 	trace_fractal(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
 void	unzoom(int x, int y, t_fractol *fractol)
@@ -87,7 +85,6 @@ void	unzoom(int x, int y, t_fractol *fractol)
 	fractol->imstart = (y / fractol->zoom + fractol->imstart) - (y / (fractol->zoom / 1.3));
 	fractol->zoom /= 1.3;
 	trace_fractal(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
 void	itmaxchange(int key, t_fractol *fractol)
@@ -102,7 +99,6 @@ void	itmaxchange(int key, t_fractol *fractol)
 		fractol->itmax -= 10;
 	}
 	trace_fractal(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
 void	changecolor(int key, t_fractol *fractol)
@@ -117,7 +113,6 @@ void	changecolor(int key, t_fractol *fractol)
 		fractol->color -= 10;
 	}
 	trace_fractal(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
 void	julia_trigger(int key, t_fractol *fractol)
@@ -167,7 +162,6 @@ int             mouse_hook(int mousecode, int x, int y, t_fractol *fractol)
 	else if (mousecode == 5 || mousecode == 2)
 		unzoom(x, y, fractol);
 	trace_fractal(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 	return (0);
 }
 
@@ -263,9 +257,8 @@ int	mandelbrot(int i, int j, t_fractol fractol)
 	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
 	{
 		tempx = zx;
-		zx = zx * zx - zy * zy + realpart;
-		zy = 2 * zy * tempx + impart;
-		//printf("zx = %f and zy = %f\n", zx, zy);
+		zx = real_part(zx, zy) + realpart;
+		zy = imaginary_part(zy, tempx) + impart;
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
@@ -280,7 +273,6 @@ int             mouse_julia(int x, int y, t_fractol *fractol)
 		fractol->impart = y * 2 - 800;
 		destroy_and_clear(fractol);
 		trace_fractal(*fractol);
-		mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 	}
 	return (0);
 }
@@ -299,8 +291,8 @@ int	julia(int i, int j, t_fractol fractol)
 	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
 	{
 		tempx = zx;
-		zx = zx * zx - zy * zy - 0.8 + (fractol.realpart / fractol.img.width);
-		zy = 2 * zy * tempx + fractol.impart / fractol.img.width;
+		zx = real_part(zx, zy) - 0.8 + (fractol.realpart / fractol.img.width);
+		zy = imaginary_part(zy, tempx) + fractol.impart / fractol.img.width;
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
