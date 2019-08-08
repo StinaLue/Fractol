@@ -9,6 +9,10 @@
 #define BURNING_SHIP 3
 #define BUFFALO 4
 
+void	prepare_mandel(t_fractol *fractol);
+
+void	prepare_julia(t_fractol *fractol);
+
 void	trace_fractal(t_fractol fractol);
 
 void	destroy_and_clear(t_fractol *fractol)
@@ -101,6 +105,17 @@ void	itmaxchange(int key, t_fractol *fractol)
 	trace_fractal(*fractol);
 }
 
+void	resetfrac(int key, t_fractol *fractol)
+{
+	(void)key;
+	destroy_and_clear(fractol);
+	if (fractol->frac == JULIA)
+		prepare_julia(fractol);
+	else if (fractol->frac == MANDELBROT)
+		prepare_mandel(fractol);
+	trace_fractal(*fractol);
+}
+
 void	changecolor(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
@@ -126,9 +141,15 @@ void	choose_frac(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	if (key == 18)
+	{
+		prepare_julia(fractol);
 		fractol->frac = JULIA;
+	}
 	else if (key == 19)
+	{
+		prepare_mandel(fractol);
 		fractol->frac = MANDELBROT;
+	}
 	else if (key == 20)
 		fractol->frac = BURNING_SHIP;
 	else if (key == 21)
@@ -149,6 +170,8 @@ int	key_press(int key, void *param)
 		itmaxchange(key, (t_fractol *)param);
 	else if	(key == N || key == M)
 		changecolor(key, (t_fractol *)param);
+	else if (key == R)
+		resetfrac(key, (t_fractol *)param);
 	else if (key == ESC)
 		close_window((t_fractol *)param);
 	return (1);
@@ -248,7 +271,6 @@ int	mandelbrot(int i, int j, t_fractol fractol)
 	double realpart;
 	double impart;
 
-	prepare_mandel(&fractol);
 	n = 0;
 	zx = 0.0;
 	zy = 0.0;
@@ -284,7 +306,6 @@ int	julia(int i, int j, t_fractol fractol)
 	int n;
 	double tempx;
 
-	//prepare_julia(fractol);
 	n = 0;
 	zx = i / fractol.zoom + fractol.realstart;
 	zy = j / fractol.zoom + fractol.imstart;
@@ -407,23 +428,41 @@ void		init_img(t_img *img, t_mlx *mlx)
 			&img->bpp, &img->size_l, &img->endian);
 }
 
-void		start_values(t_fractol *fractol)
+void		start_values(t_fractol *fractol, char *title)
 {
 	fractol->img.width = 500;
 	fractol->img.height = 500;
-	fractol->frac = JULIA;
+	if (ft_strncmp(title, "julia", ft_strlen("julia")) == 0)
+	{
+		fractol->frac = JULIA;
+		prepare_julia(fractol);
+	}
+	else if (ft_strncmp(title, "mandelbrot", ft_strlen("mandelbrot")) == 0)
+	{
+		fractol->frac = MANDELBROT;
+		prepare_mandel(fractol);
+	}
+	else if (ft_strncmp(title, "burningship", ft_strlen("burningship")) == 0)
+		fractol->frac = BURNING_SHIP;
+	else
+		fractol->frac = 0;
 }
 
 int		main(int argc, char **argv)
 {
 	t_fractol	fractol;
 
-	start_values(&fractol);
-	prepare_julia(&fractol);
-	//prepare_mandel(&fractol);
 	if (argc != 2)
 	{
-		ft_dprintf(2, "usage: ./fractol %{b}s\n", "[choice of fractal]");
+		ft_dprintf(2, "usage: ./fractol %{b}s %{r}s / %{g}s / %{m}s%{b}s\n",
+				"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
+		return (1);
+	}
+	start_values(&fractol, argv[1]);
+	if (fractol.frac == 0)
+	{
+		ft_dprintf(2, "usage: ./fractol %{b}s %{r}s / %{g}s / %{m}s%{b}s\n",
+				"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
 		return (1);
 	}
 	init_mlx(&(fractol.mlx), argv[1]);
