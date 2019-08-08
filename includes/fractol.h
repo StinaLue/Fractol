@@ -32,6 +32,8 @@ typedef struct		s_fractol
 	int		itmax;
 	int		color;
 	double		zoom;
+	int		j;
+	int		j_max;
 	double		realstart;
 	double		imstart;
 	double		realpart;
