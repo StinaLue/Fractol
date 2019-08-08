@@ -3,10 +3,10 @@
 # include "mlx.h"
 # include "libft.h"
 # include <math.h>
-//# define WIN_WIDTH 1680
-//# define WIN_HEIGHT 1050
-# define WIN_WIDTH 500
-# define WIN_HEIGHT 500
+# define WIN_WIDTH 1680
+# define WIN_HEIGHT 1050
+//# define WIN_WIDTH 500
+//# define WIN_HEIGHT 500
 
 typedef struct		s_img
 {
@@ -15,6 +15,8 @@ typedef struct		s_img
 	int		size_l;
 	int		bpp;
 	int		endian;
+	int		width;
+	int		height;
 }			t_img;
 
 typedef struct		s_mlx
