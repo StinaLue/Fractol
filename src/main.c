@@ -116,6 +116,33 @@ void	resetfrac(int key, t_fractol *fractol)
 	trace_fractal(*fractol);
 }
 
+void	imgsize(int key, t_fractol *fractol)
+{
+	if (key == 33 && fractol->img.width < WIN_WIDTH && fractol->img.width < WIN_HEIGHT)
+	{
+		fractol->img.width += 10;
+		fractol->img.height += 10;
+		destroy_and_clear(fractol);
+	}
+	else if (key == 30 && fractol->img.width > 0 && fractol->img.width > 0)
+	{
+		fractol->img.width -= 10;
+		fractol->img.height -= 10;
+		destroy_and_clear(fractol);
+	}
+	else if (key == F && fractol->img.width > 0 && fractol->img.width > 0)
+	{
+		fractol->img.width = WIN_WIDTH;
+		fractol->img.height = WIN_HEIGHT;
+		destroy_and_clear(fractol);
+	}
+	if (fractol->frac == JULIA)
+		prepare_julia(fractol);
+	else if (fractol->frac == MANDELBROT)
+		prepare_mandel(fractol);
+	trace_fractal(*fractol);
+}
+
 void	changecolor(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
@@ -172,6 +199,8 @@ int	key_press(int key, void *param)
 		changecolor(key, (t_fractol *)param);
 	else if (key == R)
 		resetfrac(key, (t_fractol *)param);
+	else if (key == 33 || key == 30 || key == F)
+		imgsize(key, (t_fractol *)param);
 	else if (key == ESC)
 		close_window((t_fractol *)param);
 	return (1);
