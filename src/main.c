@@ -130,21 +130,25 @@ void	julia_trigger(int key, t_fractol *fractol)
 
 void	choose_frac(int key, t_fractol *fractol)
 {
-	if (key == 13)
+	destroy_and_clear(fractol);
+	if (key == 18)
 		fractol->frac = JULIA;
-	else if (key == 14)
+	else if (key == 19)
 		fractol->frac = MANDELBROT;
-	else if (key == 15)
+	else if (key == 20)
 		fractol->frac = BURNING_SHIP;
-	else if (key == 16)
+	else if (key == 21)
 		fractol->frac = BUFFALO;
+	trace_fractal(fractol);
+	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
 }
 
 int	key_press(int key, void *param)
 {
+	printf("KEY = %d\n", key);
 	if (key == W)
 		julia_trigger(key, (t_fractol *)param);
-	else if (key >= 13 && key <= 25)
+	else if (key >= 18 && key <= 25)
 		choose_frac(key, (t_fractol *)param);
 	else if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP || key == ARROW_DOWN)
 		complexchange(key, (t_fractol *)param);
@@ -185,6 +189,7 @@ void	prepare_mandel(t_fractol *fractol)
 	fractol->realstart = -2.8;
 	fractol->imstart = -1.45;
 	fractol->color = 100;
+	fractol->frac = MANDELBROT;
 }
 
 void	prepare_julia(t_fractol *fractol)
@@ -253,6 +258,7 @@ int	mandelbrot(int i, int j, t_fractol *fractol)
 	double realpart;
 	double impart;
 
+	prepare_mandel(fractol);
 	n = 0;
 	zx = 0.0;
 	zy = 0.0;
@@ -290,6 +296,7 @@ int	julia(int i, int j, t_fractol *fractol)
 	int n;
 	double tempx;
 
+	//prepare_julia(fractol);
 	n = 0;
 	zx = i / fractol->zoom + fractol->realstart;
 	zy = j / fractol->zoom + fractol->imstart;
@@ -377,7 +384,10 @@ void		trace_fractal(t_fractol *fractol)
 		while (j < WIN_HEIGHT)
 		{
 			//m = mandelbrot(i, j, fractol);
-			m = julia(i, j, fractol);
+			if (fractol->frac == JULIA)
+				m = julia(i, j, fractol);
+			else if (fractol->frac == MANDELBROT)
+				m = mandelbrot(i, j, fractol);
 			//m = buffalo(i, j, fractol);
 			//m = mandeltest(i, j, fractol);
 			//m = burningship(i, j, fractol);
