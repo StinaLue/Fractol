@@ -9,9 +9,7 @@
 #define BURNING_SHIP 3
 #define BUFFALO 4
 
-void	prepare_mandel(t_fractol *fractol);
-
-void	prepare_julia(t_fractol *fractol);
+void	prepare_frac(t_fractol *fractol);
 
 void	trace_fractal(t_fractol fractol);
 
@@ -109,22 +107,26 @@ void	resetfrac(int key, t_fractol *fractol)
 {
 	(void)key;
 	destroy_and_clear(fractol);
-	if (fractol->frac == JULIA)
-		prepare_julia(fractol);
-	else if (fractol->frac == MANDELBROT)
-		prepare_mandel(fractol);
+	prepare_frac(fractol);
 	trace_fractal(*fractol);
+}
+
+int	isfullscreen(int width, int height)
+{
+	if (width == WIN_WIDTH && height == WIN_HEIGHT)
+		return (1);
+	return (0);
 }
 
 void	imgsize(int key, t_fractol *fractol)
 {
-	if (key == 33 && fractol->img.width < WIN_WIDTH && fractol->img.width < WIN_HEIGHT)
+	if (key == 33 && fractol->img.width < WIN_WIDTH && fractol->img.width < WIN_HEIGHT && !isfullscreen(fractol->img.width, fractol->img.height))
 	{
 		fractol->img.width += 10;
 		fractol->img.height += 10;
 		destroy_and_clear(fractol);
 	}
-	else if (key == 30 && fractol->img.width > 0 && fractol->img.width > 0)
+	else if (key == 30 && fractol->img.width > 0 && fractol->img.width > 0 && !isfullscreen(fractol->img.width, fractol->img.height))
 	{
 		fractol->img.width -= 10;
 		fractol->img.height -= 10;
@@ -132,14 +134,19 @@ void	imgsize(int key, t_fractol *fractol)
 	}
 	else if (key == F && fractol->img.width > 0 && fractol->img.width > 0)
 	{
-		fractol->img.width = WIN_WIDTH;
-		fractol->img.height = WIN_HEIGHT;
+		if (isfullscreen(fractol->img.width, fractol->img.height))
+		{
+			fractol->img.width = 500;
+			fractol->img.height = 500;
+		}
+		else
+		{
+			fractol->img.width = WIN_WIDTH;
+			fractol->img.height = WIN_HEIGHT;
+		}
 		destroy_and_clear(fractol);
 	}
-	if (fractol->frac == JULIA)
-		prepare_julia(fractol);
-	else if (fractol->frac == MANDELBROT)
-		prepare_mandel(fractol);
+	prepare_frac(fractol);
 	trace_fractal(*fractol);
 }
 
@@ -169,12 +176,12 @@ void	choose_frac(int key, t_fractol *fractol)
 	destroy_and_clear(fractol);
 	if (key == 18)
 	{
-		prepare_julia(fractol);
+		prepare_frac(fractol);
 		fractol->frac = JULIA;
 	}
 	else if (key == 19)
 	{
-		prepare_mandel(fractol);
+		prepare_frac(fractol);
 		fractol->frac = MANDELBROT;
 	}
 	else if (key == 20)
@@ -226,22 +233,14 @@ void	keys_and_mouse(t_fractol *fractol)
 	mlx_mouse_hook(fractol->mlx.win_ptr, mouse_hook, fractol);
 }
 
-void	prepare_mandel(t_fractol *fractol)
-{
-	fractol->itmax = 100;
-	fractol->zoom = fractol->img.height / 3;
-	fractol->realstart = -2.8;
-	fractol->imstart = -1.45;
-	fractol->color = 100;
-}
-
-void	prepare_julia(t_fractol *fractol)
+void	prepare_frac(t_fractol *fractol)
 {
 	fractol->itmax = 100;
 	fractol->zoom = fractol->img.height / 3;
 	fractol->realstart = -2.0;
 	fractol->imstart = -1.9;
-	fractol->color = 2050;
+	//fractol->color = 2050;
+	fractol->color = 0x525252;
 	fractol->realpart = 0.285;
 	fractol->impart = 0.01;
 	fractol->julia_mouse = 1;
@@ -461,16 +460,11 @@ void		start_values(t_fractol *fractol, char *title)
 {
 	fractol->img.width = 500;
 	fractol->img.height = 500;
+	prepare_frac(fractol);
 	if (ft_strncmp(title, "julia", ft_strlen("julia")) == 0)
-	{
 		fractol->frac = JULIA;
-		prepare_julia(fractol);
-	}
 	else if (ft_strncmp(title, "mandelbrot", ft_strlen("mandelbrot")) == 0)
-	{
 		fractol->frac = MANDELBROT;
-		prepare_mandel(fractol);
-	}
 	else if (ft_strncmp(title, "burningship", ft_strlen("burningship")) == 0)
 		fractol->frac = BURNING_SHIP;
 	else
