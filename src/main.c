@@ -9,7 +9,7 @@
 #define MANDELBROT 2
 #define BURNING_SHIP 3
 #define BUFFALO 4
-#define NB_THREADS 4
+#define NB_THREADS 100
 
 void		multithread(t_fractol fractol);
 
@@ -436,14 +436,13 @@ void		*trace_fractal(void *fractol)
 	while (i < fract->img.width)
 	{
 		fract->j = temp;
-		while (fract->j < fract->img.width)//fract->j_max)
+		while (fract->j < fract->j_max)
 		{
 			calc_frac(i, fract->j, *fract);
 			fract->j++;
 		}
 		i++;
 	}
-	//mlx_put_image_to_window(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, fractol.img.img_ptr, 0, 0);
 	return (NULL);
 }
 
@@ -452,16 +451,16 @@ void		multithread(t_fractol fractol)
 	t_fractol	params[NB_THREADS];
 	pthread_t	threads[NB_THREADS];
 	int		i;
-	int		width;
+	int		height;
 
 	i = 0;
-	width = fractol.img.width;
+	height = fractol.img.height;
 	while (i < NB_THREADS)
 	{
 		ft_memcpy((void *)&params[i], (void *)&fractol, sizeof(t_fractol));
-		params[i].j = (width / NB_THREADS) * i;
-		params[i].j_max = (width / NB_THREADS) * (i + 1);
-		pthread_create(&threads[i], NULL, trace_fractal, &params);
+		params[i].j = (height / NB_THREADS) * i;
+		params[i].j_max = (height / NB_THREADS) * (i + 1);
+		pthread_create(&threads[i], NULL, trace_fractal, &params[i]);
 		i++;
 	}
 	while (i--)
