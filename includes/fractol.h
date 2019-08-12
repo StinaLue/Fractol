@@ -38,6 +38,8 @@ typedef struct		s_fractol
 	double		imstart;
 	double		realpart;
 	double		impart;
+	int		palettes[5];
+	int		index;
 	int		julia_mouse;
 	int		menu;
 	int		frac;

@@ -142,11 +142,14 @@ void	changecolor(int key, t_fractol *fractol)
 	destroy_and_clear(fractol);
 	if (key == N)
 	{
-		fractol->color += 10;
+		fractol->index++;
+		if (fractol->index > 4)
+			fractol->index = 0;
+		fractol->color = fractol->palettes[fractol->index];
 	}
 	else if (key == M)
 	{
-		fractol->color -= 10;
+		fractol->color += 10;
 	}
 	multithread(*fractol);
 }
@@ -231,8 +234,14 @@ void	prepare_frac(t_fractol *fractol)
 	fractol->realstart = -2.0;
 	fractol->imstart = -1.9;
 	fractol->menu = 1;
-	//fractol->color = 2050;
-	fractol->color = 0x525252;
+	fractol->index = 0;
+	fractol->palettes[0] = 0x525252;
+	fractol->palettes[1] = 0xfac0e1;
+	fractol->palettes[2] = 0x090088;
+	fractol->palettes[3] = 0xecfcff;
+	fractol->palettes[4] = 0x1e0411;
+	//fractol->palettes[4] = 0xff5200;
+	fractol->color = fractol->palettes[fractol->index];
 	fractol->realpart = 0.285;
 	fractol->impart = 0.01;
 	fractol->julia_mouse = 1;
@@ -257,50 +266,23 @@ void	fill_pix(int x, int y, t_fractol *fractol, int color)
 	}
 }
 
-int	mandeltest(int i, int j, t_fractol *fractol)
-{
-	double zx;
-	double zy;
-	int n;
-	double tempx;
-	double rlpart;
-	double impart;
-
-	n = 0;
-	zx = 0.0;
-	zy = 1.0;
-	rlpart = i / fractol->zoom + fractol->realstart;
-	impart = j / fractol->zoom + fractol->imstart;
-	while ((zx * zx) + (zy * zy) < 4 && n < fractol->itmax)
-	{
-		tempx = zx;
-		zx = zx * zx - zy * zy + rlpart;
-		zy = 2 * zy * tempx + impart;
-		n++;
-	}
-	fill_pix(i, j, fractol, n == fractol->itmax ? 0x000000 : fractol->color * n);
-	return (n);
-}
-
 int	mandelbrot(int i, int j, t_fractol fractol)
 {
 	double zx;
 	double zy;
 	int n;
 	double tempx;
-	double realpart;
-	double impart;
 
 	n = 0;
 	zx = 0.0;
 	zy = 0.0;
-	realpart = i / fractol.zoom + fractol.realstart;
-	impart = j / fractol.zoom + fractol.imstart;
+	fractol.realpart = i / fractol.zoom + fractol.realstart;
+	fractol.impart = j / fractol.zoom + fractol.imstart;
 	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
 	{
 		tempx = zx;
-		zx = real_part(zx, zy) + realpart;
-		zy = imaginary_part(zy, tempx) + impart;
+		zx = real_part(zx, zy) + fractol.realpart;
+		zy = imaginary_part(zy, tempx) + fractol.impart;
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
@@ -346,19 +328,17 @@ int	buffalo(int i, int j, t_fractol fractol)
 	double zy;
 	int n;
 	double tempx;
-	double rlpart;
-	double impart;
 
 	n = 0;
 	zx = 0.0;
 	zy = 0.0;
-	rlpart = i / fractol.zoom + fractol.realstart;
-	impart = j / fractol.zoom + fractol.imstart;
+	fractol.realpart = i / fractol.zoom + fractol.realstart;
+	fractol.impart = j / fractol.zoom + fractol.imstart;
 	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
 	{
 		tempx = zx;
-		zx = ft_absfloat(real_part(zx, zy)) + rlpart;
-		zy = ft_absfloat(imaginary_part(zy, tempx)) + impart;
+		zx = ft_absfloat(real_part(zx, zy)) + fractol.realpart;
+		zy = ft_absfloat(imaginary_part(zy, tempx)) + fractol.impart;
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
@@ -371,32 +351,22 @@ int	burningship(int i, int j, t_fractol fractol)
 	double zy;
 	int n;
 	double tempx;
-	double rlpart;
-	double impart;
 
 	n = 0;
 	zx = 0.0;
 	zy = 0.0;
-	rlpart = i / fractol.zoom + fractol.realstart;
-	impart = j / fractol.zoom + fractol.imstart;
+	fractol.realpart = i / fractol.zoom + fractol.realstart;
+	fractol.impart = j / fractol.zoom + fractol.imstart;
 	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
 	{
 		tempx = zx;
-		zx = real_part(ft_absfloat(zx), ft_absfloat(zy)) + rlpart;
-		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx)) + impart;
+		zx = real_part(ft_absfloat(zx), ft_absfloat(zy)) + fractol.realpart;
+		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx)) + fractol.impart;
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
 	return (n);
 }
-
-/*
-   void	keys_and_mouse(t_fractol *fractol)
-   {
-   mlx_hook(fractol->mlx.win_ptr, 2, 0, key_press, fractol);
-   mlx_hook(fractol->mlx.win_ptr, 4, 0, mouse_press, fractol);
-   }
- */
 
 void		calc_frac(int i, int j, t_fractol fractol)
 {
@@ -528,6 +498,8 @@ void	outputcommands(t_fractol fractol)
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 150,
 					0xFFFFFF, "Change img size: '[' / ']'");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 170,
+					0xFFFFFF, "Psychedelic mode: M");
+	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 190,
 					0xFFFFFF, "Close the window: 'esc'");
 }
 
