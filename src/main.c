@@ -1,15 +1,9 @@
 #include <stdio.h>
-#include <pthread.h>
 
 #include "fractol.h"
 #include "keys_and_mouse.h"
 #include <math.h>
 #include "libft.h"
-#define JULIA 1
-#define MANDELBROT 2
-#define BURNING_SHIP 3
-#define BUFFALO 4
-#define NB_THREADS 100
 
 void		multithread(t_fractol fractol);
 
@@ -173,6 +167,8 @@ void	choose_frac(int key, t_fractol *fractol)
 		fractol->frac = BURNING_SHIP;
 	else if (key == 21)
 		fractol->frac = BUFFALO;
+	else if (key == 23)
+		fractol->frac = CELTIC_MANDEL;
 	multithread(*fractol);
 }
 
@@ -247,48 +243,6 @@ void	prepare_frac(t_fractol *fractol)
 	fractol->julia_mouse = 1;
 }
 
-double	real_part(double a, double b)
-{
-	return (a * a - b * b);
-}
-
-double	imaginary_part(double a, double b)
-{
-	return (2 * a * b);
-}
-
-void	fill_pix(int x, int y, t_fractol *fractol, int color)
-{
-	if ((x + y * fractol->img.width) < (fractol->img.width * fractol->img.height)
-			&& (x + y * fractol->img.width) > 0 && x < fractol->img.width && x > 0)
-	{
-		fractol->img.data[x + y * fractol->img.width] = color;
-	}
-}
-
-int	mandelbrot(int i, int j, t_fractol fractol)
-{
-	double zx;
-	double zy;
-	int n;
-	double tempx;
-
-	n = 0;
-	zx = 0.0;
-	zy = 0.0;
-	fractol.realpart = i / fractol.zoom + fractol.realstart;
-	fractol.impart = j / fractol.zoom + fractol.imstart;
-	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
-	{
-		tempx = zx;
-		zx = real_part(zx, zy) + fractol.realpart;
-		zy = imaginary_part(zy, tempx) + fractol.impart;
-		n++;
-	}
-	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
-	return (n);
-}
-
 int             mouse_julia(int x, int y, t_fractol *fractol)
 {
 	if (fractol->frac == JULIA && fractol->julia_mouse == 1)
@@ -301,135 +255,7 @@ int             mouse_julia(int x, int y, t_fractol *fractol)
 	return (0);
 }
 
-int	julia(int i, int j, t_fractol fractol)
-{
-	double zx;
-	double zy;
-	int n;
-	double tempx;
-
-	n = 0;
-	zx = i / fractol.zoom + fractol.realstart;
-	zy = j / fractol.zoom + fractol.imstart;
-	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
-	{
-		tempx = zx;
-		zx = real_part(zx, zy) - 0.8 + (fractol.realpart / fractol.img.width);
-		zy = imaginary_part(zy, tempx) + fractol.impart / fractol.img.width;
-		n++;
-	}
-	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
-	return (n);
-}
-
-int	buffalo(int i, int j, t_fractol fractol)
-{
-	double zx;
-	double zy;
-	int n;
-	double tempx;
-
-	n = 0;
-	zx = 0.0;
-	zy = 0.0;
-	fractol.realpart = i / fractol.zoom + fractol.realstart;
-	fractol.impart = j / fractol.zoom + fractol.imstart;
-	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
-	{
-		tempx = zx;
-		zx = ft_absfloat(real_part(zx, zy)) + fractol.realpart;
-		zy = ft_absfloat(imaginary_part(zy, tempx)) + fractol.impart;
-		n++;
-	}
-	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
-	return (n);
-}
-
-int	burningship(int i, int j, t_fractol fractol)
-{
-	double zx;
-	double zy;
-	int n;
-	double tempx;
-
-	n = 0;
-	zx = 0.0;
-	zy = 0.0;
-	fractol.realpart = i / fractol.zoom + fractol.realstart;
-	fractol.impart = j / fractol.zoom + fractol.imstart;
-	while ((zx * zx) + (zy * zy) < 4 && n < fractol.itmax)
-	{
-		tempx = zx;
-		zx = real_part(ft_absfloat(zx), ft_absfloat(zy)) + fractol.realpart;
-		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx)) + fractol.impart;
-		n++;
-	}
-	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
-	return (n);
-}
-
-void		calc_frac(int i, int j, t_fractol fractol)
-{
-	if (fractol.frac == JULIA)
-		julia(i, j, fractol);
-	else if (fractol.frac == MANDELBROT)
-		mandelbrot(i, j, fractol);
-	else if (fractol.frac == BURNING_SHIP)
-		burningship(i, j, fractol);
-	else if (fractol.frac == BUFFALO)
-		buffalo(i, j, fractol);
-}
-
-void		*trace_fractal(void *fractol)
-{
-	int i;
-	int temp;
-	t_fractol	*fract;
-
-	i = 0;
-	fract = (t_fractol *)fractol;
-	temp = fract->j;
-	while (i < fract->img.width)
-	{
-		fract->j = temp;
-		while (fract->j < fract->j_max)
-		{
-			calc_frac(i, fract->j, *fract);
-			fract->j++;
-		}
-		i++;
-	}
-	return (NULL);
-}
-
 void		menu(t_fractol fractol);
-
-void		multithread(t_fractol fractol)
-{
-	t_fractol	params[NB_THREADS];
-	pthread_t	threads[NB_THREADS];
-	int		i;
-	int		height;
-
-	i = 0;
-	height = fractol.img.height;
-	while (i < NB_THREADS)
-	{
-		ft_memcpy((void *)&params[i], (void *)&fractol, sizeof(t_fractol));
-		params[i].j = (height / NB_THREADS) * i;
-		params[i].j_max = (height / NB_THREADS) * (i + 1);
-		pthread_create(&threads[i], NULL, trace_fractal, &params[i]);
-		i++;
-	}
-	while (i--)
-		pthread_join(threads[i], NULL);
-	mlx_put_image_to_window(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, fractol.img.img_ptr, 0, 0);
-	if (fractol.menu)
-		menu(fractol);
-	else
-		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
-					0xFFFFFF, "Show menu: H");
-}
 
 void		init_mlx(t_mlx *mlx, char *title)
 {
@@ -461,54 +287,6 @@ void		start_values(t_fractol *fractol, char *title)
 		fractol->frac = BURNING_SHIP;
 	else
 		fractol->frac = 0;
-}
-
-void	outputfrac(t_fractol fractol)
-{
-	if (fractol.frac == JULIA)
-		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
-					0xFFFFFF, "JULIA");
-	else if (fractol.frac == MANDELBROT)
-		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
-					0xFFFFFF, "MANDELBROT");
-	else if (fractol.frac == BURNING_SHIP)
-		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
-					0xFFFFFF, "BURNING SHIP");
-	else if (fractol.frac == BUFFALO)
-		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
-					0xFFFFFF, "BUFALLO");
-}
-
-void	outputcommands(t_fractol fractol)
-{
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 30,
-					0xFFFFFF, "Change      palette: N");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 75, 30,
-					fractol.color, "color");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 50,
-					0xFFFFFF, "Iterations: O(+)/P(-) | current:");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 70,
-					0xFFFFFF, "Zoom: scroll up/scroll down");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 90,
-					0xFFFFFF, "Move: arrows");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 110,
-					0xFFFFFF, "Reset: R | Hide menu: H");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 130,
-					0xFFFFFF, "Change fractal: 1/2/3/4");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 150,
-					0xFFFFFF, "Change img size: '[' / ']'");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 170,
-					0xFFFFFF, "Psychedelic mode: M");
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 190,
-					0xFFFFFF, "Close the window: 'esc'");
-}
-
-void	menu(t_fractol fractol)
-{
-	outputfrac(fractol);
-	outputcommands(fractol);
-	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 350, 50,
-					0xFFFFFF, ft_itoa(fractol.itmax));
 }
 
 int		main(int argc, char **argv)

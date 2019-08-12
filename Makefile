@@ -32,7 +32,11 @@ HEADERS_DIRECTORY = ./includes/
 HEADERS = $(addprefix $(HEADERS_DIRECTORY), $(HEADERS_LIST))
 
 SOURCES_DIRECTORY = ./src/
-SOURCES_LIST = main.c
+SOURCES_LIST = main.c \
+	       menu.c \
+	       fractals.c \
+	       multithread_trace.c \
+	       utils.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
 

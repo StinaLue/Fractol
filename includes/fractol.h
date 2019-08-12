@@ -2,11 +2,15 @@
 # define FRACTOL
 # include "mlx.h"
 # include "libft.h"
-# include <math.h>
+//# include <math.h>
 # define WIN_WIDTH 1680
 # define WIN_HEIGHT 1050
-//# define WIN_WIDTH 500
-//# define WIN_HEIGHT 500
+# define JULIA 1
+# define MANDELBROT 2
+# define BURNING_SHIP 3
+# define BUFFALO 4
+# define CELTIC_MANDEL 5
+# define NB_THREADS 100
 
 typedef struct		s_img
 {
@@ -44,5 +48,37 @@ typedef struct		s_fractol
 	int		menu;
 	int		frac;
 }			t_fractol;
+
+void	menu(t_fractol fractol);
+
+/*
+** FRACTALS
+*/
+
+int     mandelbrot(int i, int j, t_fractol fractol);
+
+int     julia(int i, int j, t_fractol fractol);
+
+int     buffalo(int i, int j, t_fractol fractol);
+
+int     burningship(int i, int j, t_fractol fractol);
+
+int     celticmandel(int i, int j, t_fractol fractol);
+
+/*
+** MULTITHREAD TRACING
+*/
+
+void            multithread(t_fractol fractol);
+
+/*
+** UTILS
+*/
+
+double  real_part(double a, double b);
+
+double  imaginary_part(double a, double b);
+
+void    fill_pix(int x, int y, t_fractol *fractol, int color);
 
 #endif
