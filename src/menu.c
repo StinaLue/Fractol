@@ -1,5 +1,12 @@
 #include "fractol.h"
 
+void    menu_trigger(int key, t_fractol *fractol)
+{
+	(void)key;
+	fractol->menu = !fractol->menu;
+	multithread(*fractol);
+}
+
 void    outputfrac(t_fractol fractol)
 {
 	if (fractol.frac == JULIA)

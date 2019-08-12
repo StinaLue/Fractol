@@ -36,6 +36,10 @@ SOURCES_LIST = main.c \
 	       menu.c \
 	       fractals.c \
 	       multithread_trace.c \
+	       init.c \
+	       image_handler.c \
+	       mouse_events.c \
+	       key_events.c \
 	       utils.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
