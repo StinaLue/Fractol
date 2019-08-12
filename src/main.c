@@ -54,27 +54,7 @@ void	close_window(t_fractol *fractol)
 	destroy_and_clear(fractol);
 	exit(0);
 }
-/*
-void	zoom(int x, int y, t_fractol *fractol)
-{
-	destroy_and_clear(fractol);
-	if (key == W)
-	{
-		fractol
-		fractol->julia_mouse = !fractol->julia_mouse;->realstart = fractol->zoom += 100;
-		//fractol->realstart += fractol->realstart / fractol->zoom;
-		//fractol->imstart += fractol->imstart / fractol->zoom;
-	}
-	else if (key == S)
-	{
-		fractol->zoom -= 100;
-		//	fractol->realstart -= fractol->realstart / fractol->zoom;
-		//	fractol->imstart -= fractol->imstart / fractol->zoom;
-	}
-	multithread(*fractol);
-	mlx_put_image_to_window(fractol->mlx.mlx_ptr, fractol->mlx.win_ptr, fractol->img.img_ptr, 0, 0);
-}
-*/
+
 void	zoom(int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
@@ -100,7 +80,7 @@ void	itmaxchange(int key, t_fractol *fractol)
 	{
 		fractol->itmax += 10;
 	}
-	else if (key == P)
+	else if (key == P && fractol->itmax > 0)
 	{
 		fractol->itmax -= 10;
 	}
@@ -122,34 +102,37 @@ int	isfullscreen(int width, int height)
 	return (0);
 }
 
+void	togglefullscreen(t_fractol *fractol)
+{
+	if (isfullscreen(fractol->img.width, fractol->img.height))
+	{
+		fractol->img.width = 500;
+		fractol->img.height = 500;
+	}
+	else
+	{
+		fractol->img.width = WIN_WIDTH;
+		fractol->img.height = WIN_HEIGHT;
+	}
+}
+
 void	imgsize(int key, t_fractol *fractol)
 {
-	if (key == 33 && fractol->img.width < WIN_WIDTH && fractol->img.width < WIN_HEIGHT && !isfullscreen(fractol->img.width, fractol->img.height))
+	if (key == 33 && fractol->img.width < WIN_WIDTH && fractol->img.height < WIN_HEIGHT \
+			&& !isfullscreen(fractol->img.width, fractol->img.height))
 	{
 		fractol->img.width += 10;
 		fractol->img.height += 10;
-		destroy_and_clear(fractol);
 	}
-	else if (key == 30 && fractol->img.width > 0 && fractol->img.width > 0 && !isfullscreen(fractol->img.width, fractol->img.height))
+	else if (key == 30 && fractol->img.width > 100 && fractol->img.height > 100 && \
+			!isfullscreen(fractol->img.width, fractol->img.height))
 	{
 		fractol->img.width -= 10;
 		fractol->img.height -= 10;
-		destroy_and_clear(fractol);
 	}
-	else if (key == F && fractol->img.width > 0 && fractol->img.width > 0)
-	{
-		if (isfullscreen(fractol->img.width, fractol->img.height))
-		{
-			fractol->img.width = 500;
-			fractol->img.height = 500;
-		}
-		else
-		{
-			fractol->img.width = WIN_WIDTH;
-			fractol->img.height = WIN_HEIGHT;
-		}
-		destroy_and_clear(fractol);
-	}
+	else if (key == F && fractol->img.width > 0 && fractol->img.height > 0)
+		togglefullscreen(fractol);
+	destroy_and_clear(fractol);
 	prepare_frac(fractol);
 	multithread(*fractol);
 }
@@ -178,20 +161,22 @@ void	julia_trigger(int key, t_fractol *fractol)
 void	choose_frac(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
+	prepare_frac(fractol);
 	if (key == 18)
-	{
-		prepare_frac(fractol);
 		fractol->frac = JULIA;
-	}
 	else if (key == 19)
-	{
-		prepare_frac(fractol);
 		fractol->frac = MANDELBROT;
-	}
 	else if (key == 20)
 		fractol->frac = BURNING_SHIP;
 	else if (key == 21)
 		fractol->frac = BUFFALO;
+	multithread(*fractol);
+}
+
+void	menu_trigger(int key, t_fractol *fractol)
+{
+	(void)key;
+	fractol->menu = !fractol->menu;
 	multithread(*fractol);
 }
 
@@ -212,6 +197,8 @@ int	key_press(int key, void *param)
 		resetfrac(key, (t_fractol *)param);
 	else if (key == 33 || key == 30 || key == F)
 		imgsize(key, (t_fractol *)param);
+	else if (key == HKEY)
+		menu_trigger(key, (t_fractol *)param);
 	else if (key == ESC)
 		close_window((t_fractol *)param);
 	return (1);
@@ -243,6 +230,7 @@ void	prepare_frac(t_fractol *fractol)
 	fractol->zoom = fractol->img.height / 3;
 	fractol->realstart = -2.0;
 	fractol->imstart = -1.9;
+	fractol->menu = 1;
 	//fractol->color = 2050;
 	fractol->color = 0x525252;
 	fractol->realpart = 0.285;
@@ -371,7 +359,6 @@ int	buffalo(int i, int j, t_fractol fractol)
 		tempx = zx;
 		zx = ft_absfloat(real_part(zx, zy)) + rlpart;
 		zy = ft_absfloat(imaginary_part(zy, tempx)) + impart;
-		//printf("zx = %f and zy = %f\n", zx, zy);
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
@@ -397,7 +384,6 @@ int	burningship(int i, int j, t_fractol fractol)
 		tempx = zx;
 		zx = real_part(ft_absfloat(zx), ft_absfloat(zy)) + rlpart;
 		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx)) + impart;
-		//printf("zx = %f and zy = %f\n", zx, zy);
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);
@@ -468,7 +454,11 @@ void		multithread(t_fractol fractol)
 	while (i--)
 		pthread_join(threads[i], NULL);
 	mlx_put_image_to_window(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, fractol.img.img_ptr, 0, 0);
-	menu(fractol);
+	if (fractol.menu)
+		menu(fractol);
+	else
+		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
+					0xFFFFFF, "Show menu: H");
 }
 
 void		init_mlx(t_mlx *mlx, char *title)
@@ -532,10 +522,12 @@ void	outputcommands(t_fractol fractol)
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 90,
 					0xFFFFFF, "Move: arrows");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 110,
-					0xFFFFFF, "Reset: R");
+					0xFFFFFF, "Reset: R | Hide menu: H");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 130,
 					0xFFFFFF, "Change fractal: 1/2/3/4");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 150,
+					0xFFFFFF, "Change img size: '[' / ']'");
+	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 170,
 					0xFFFFFF, "Close the window: 'esc'");
 }
 
@@ -566,7 +558,6 @@ int		main(int argc, char **argv)
 	}
 	init_mlx(&(fractol.mlx), argv[1]);
 	init_img(&(fractol.img), &(fractol.mlx));
-	//multithread(*fractol);
 	multithread(fractol);
 	keys_and_mouse(&fractol);
 	menu(fractol);

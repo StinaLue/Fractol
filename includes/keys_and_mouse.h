@@ -36,6 +36,7 @@
 # define A 0
 # define S 1
 # define G 5
+# define HKEY 4
 # define F 3
 # define C 8
 # define B 11
