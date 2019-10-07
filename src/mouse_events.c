@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   mouse_events.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 19:54:16 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 19:54:56 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
-void    zoom(int x, int y, t_fractol *fractol)
+void	zoom(int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	fractol->realstart = (x / fractol->zoom + fractol->realstart) - (x / (fractol->zoom * 1.3));
@@ -9,7 +21,7 @@ void    zoom(int x, int y, t_fractol *fractol)
 	multithread(*fractol);
 }
 
-void    unzoom(int x, int y, t_fractol *fractol)
+void	unzoom(int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	fractol->realstart = (x / fractol->zoom + fractol->realstart) - (x / (fractol->zoom / 1.3));
@@ -18,7 +30,7 @@ void    unzoom(int x, int y, t_fractol *fractol)
 	multithread(*fractol);
 }
 
-int             mouse_hook(int mousecode, int x, int y, t_fractol *fractol)
+int		mouse_hook(int mousecode, int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	if (mousecode == 4 || mousecode == 1)
@@ -29,7 +41,7 @@ int             mouse_hook(int mousecode, int x, int y, t_fractol *fractol)
 	return (0);
 }
 
-int             mouse_julia(int x, int y, t_fractol *fractol)
+int		mouse_julia(int x, int y, t_fractol *fractol)
 {
 	if (fractol->frac == JULIA && fractol->julia_mouse == 1)
 	{
@@ -41,7 +53,7 @@ int             mouse_julia(int x, int y, t_fractol *fractol)
 	return (0);
 }
 
-void    julia_trigger(int key, t_fractol *fractol)
+void	julia_trigger(int key, t_fractol *fractol)
 {
 	(void)key;
 	if (fractol->frac == JULIA)

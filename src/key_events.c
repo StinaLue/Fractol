@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   key_events.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 19:49:10 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 19:51:21 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 #include "keys_and_mouse.h"
 
-void    complexchange(int key, t_fractol *fractol)
+void	complexchange(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	if (key == ARROW_LEFT)
@@ -15,7 +27,7 @@ void    complexchange(int key, t_fractol *fractol)
 	multithread(*fractol);
 }
 
-void    itmaxchange(int key, t_fractol *fractol)
+void	itmaxchange(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	if (key == O)
@@ -25,7 +37,7 @@ void    itmaxchange(int key, t_fractol *fractol)
 	multithread(*fractol);
 }
 
-void    resetfrac(int key, t_fractol *fractol)
+void	resetfrac(int key, t_fractol *fractol)
 {
 	(void)key;
 	destroy_and_clear(fractol);
@@ -33,7 +45,7 @@ void    resetfrac(int key, t_fractol *fractol)
 	multithread(*fractol);
 }
 
-void    changecolor(int key, t_fractol *fractol)
+void	changecolor(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	if (key == N)
@@ -50,7 +62,7 @@ void    changecolor(int key, t_fractol *fractol)
 	multithread(*fractol);
 }
 
-void    choose_frac(int key, t_fractol *fractol)
+void	choose_frac(int key, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
 	prepare_frac(fractol);

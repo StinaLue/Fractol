@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   menu.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 19:53:39 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 19:54:10 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
-void    menu_trigger(int key, t_fractol *fractol)
+void	menu_trigger(int key, t_fractol *fractol)
 {
 	(void)key;
 	fractol->menu = !fractol->menu;
 	multithread(*fractol);
 }
 
-void    outputfrac(t_fractol fractol)
+void	outputfrac(t_fractol fractol)
 {
 	if (fractol.frac == JULIA)
 		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
@@ -26,7 +38,7 @@ void    outputfrac(t_fractol fractol)
 				0xFFFFFF, "CELTIC MANDELBROT");
 }
 
-void    outputcommands(t_fractol fractol)
+void	outputcommands(t_fractol fractol)
 {
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 30,
 			0xFFFFFF, "Change      palette: N");
@@ -50,7 +62,7 @@ void    outputcommands(t_fractol fractol)
 			0xFFFFFF, "Close the window: 'esc'");
 }
 
-void    menu(t_fractol fractol)
+void	menu(t_fractol fractol)
 {
 	outputfrac(fractol);
 	outputcommands(fractol);

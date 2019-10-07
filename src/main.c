@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 19:51:51 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 19:53:27 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 #include "keys_and_mouse.h"
 
@@ -7,13 +19,14 @@ void	close_window(t_fractol *fractol)
 	exit(0);
 }
 
-int	key_press(int key, void *param)
+int		key_press(int key, void *param)
 {
 	if (key == W)
 		julia_trigger(key, (t_fractol *)param);
 	else if (key >= 18 && key <= 25)
 		choose_frac(key, (t_fractol *)param);
-	else if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP || key == ARROW_DOWN)
+	else if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP
+		|| key == ARROW_DOWN)
 		complexchange(key, (t_fractol *)param);
 	else if (key == O || key == P)
 		itmaxchange(key, (t_fractol *)param);
@@ -44,14 +57,14 @@ int		main(int argc, char **argv)
 	if (argc != 2)
 	{
 		ft_dprintf(2, "usage: ./fractol %{b}s %{r}s / %{g}s / %{m}s%{b}s\n",
-				"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
+			"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
 		return (1);
 	}
 	start_values(&fractol, argv[1]);
 	if (fractol.frac == 0)
 	{
 		ft_dprintf(2, "usage: ./fractol %{b}s %{r}s / %{g}s / %{m}s%{b}s\n",
-				"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
+			"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
 		return (1);
 	}
 	init_mlx(&(fractol.mlx), argv[1]);

@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   multithread_trace.c                                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 19:55:05 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 19:55:50 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 #include <pthread.h>
 
-void            calc_frac(int i, int j, t_fractol fractol)
+void    calc_frac(int i, int j, t_fractol fractol)
 {
         if (fractol.frac == JULIA)
                 julia(i, j, fractol);
@@ -15,7 +27,7 @@ void            calc_frac(int i, int j, t_fractol fractol)
                 celticmandel(i, j, fractol);
 }
 
-void            *trace_fractal(void *fractol)
+void    *trace_fractal(void *fractol)
 {
         int i;
         int temp;
@@ -37,7 +49,7 @@ void            *trace_fractal(void *fractol)
         return (NULL);
 }
 
-void            multithread(t_fractol fractol)
+void    multithread(t_fractol fractol)
 {
         t_fractol       params[NB_THREADS];
         pthread_t       threads[NB_THREADS];
