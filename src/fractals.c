@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   fractals.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 17:56:54 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 18:07:09 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
 int	mandelbrot(int i, int j, t_fractol fractol)
 {
-	double zx;
-	double zy;
-	int n;
-	double tempx;
+	double	zx;
+	double	zy;
+	int		n;
+	double	tempx;
 
 	n = 0;
 	zx = 0.0;
@@ -25,10 +37,10 @@ int	mandelbrot(int i, int j, t_fractol fractol)
 
 int	julia(int i, int j, t_fractol fractol)
 {
-	double zx;
-	double zy;
-	int n;
-	double tempx;
+	double	zx;
+	double	zy;
+	int		n;
+	double	tempx;
 
 	n = 0;
 	zx = i / fractol.zoom + fractol.realstart;
@@ -46,10 +58,10 @@ int	julia(int i, int j, t_fractol fractol)
 
 int	buffalo(int i, int j, t_fractol fractol)
 {
-	double zx;
-	double zy;
-	int n;
-	double tempx;
+	double	zx;
+	double	zy;
+	int		n;
+	double	tempx;
 
 	n = 0;
 	zx = 0.0;
@@ -69,10 +81,10 @@ int	buffalo(int i, int j, t_fractol fractol)
 
 int	celticmandel(int i, int j, t_fractol fractol)
 {
-	double zx;
-	double zy;
-	int n;
-	double tempx;
+	double	zx;
+	double	zy;
+	int		n;
+	double	tempx;
 
 	n = 0;
 	zx = 0.0;
@@ -92,10 +104,10 @@ int	celticmandel(int i, int j, t_fractol fractol)
 
 int	burningship(int i, int j, t_fractol fractol)
 {
-	double zx;
-	double zy;
-	int n;
-	double tempx;
+	double	zx;
+	double	zy;
+	int		n;
+	double	tempx;
 
 	n = 0;
 	zx = 0.0;
@@ -106,7 +118,8 @@ int	burningship(int i, int j, t_fractol fractol)
 	{
 		tempx = zx;
 		zx = real_part(ft_absfloat(zx), ft_absfloat(zy)) + fractol.realpart;
-		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx)) + fractol.impart;
+		zy = imaginary_part(ft_absfloat(zy), ft_absfloat(tempx))
+			+ fractol.impart;
 		n++;
 	}
 	fill_pix(i, j, &fractol, n == fractol.itmax ? 0x000000 : fractol.color * n);

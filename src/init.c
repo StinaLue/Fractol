@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2019/10/07 18:15:28 by afonck            #+#    #+#             */
+/*   Updated: 2019/10/07 18:17:04 by afonck           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "fractol.h"
 
-void            init_mlx(t_mlx *mlx, char *title)
+void	init_mlx(t_mlx *mlx, char *title)
 {
 	if ((mlx->mlx_ptr = mlx_init()) == NULL)
 	{
@@ -10,14 +22,14 @@ void            init_mlx(t_mlx *mlx, char *title)
 	mlx->win_ptr = mlx_new_window(mlx->mlx_ptr, WIN_WIDTH, WIN_HEIGHT, title);
 }
 
-void            init_img(t_img *img, t_mlx *mlx)
+void	init_img(t_img *img, t_mlx *mlx)
 {
 	img->img_ptr = mlx_new_image(mlx->mlx_ptr, img->width, img->height);
 	img->data = (int *)mlx_get_data_addr(img->img_ptr,
 			&img->bpp, &img->size_l, &img->endian);
 }
 
-void    prepare_frac(t_fractol *fractol)
+void	prepare_frac(t_fractol *fractol)
 {
 	fractol->itmax = 100;
 	fractol->zoom = fractol->img.height / 3;
@@ -30,14 +42,13 @@ void    prepare_frac(t_fractol *fractol)
 	fractol->palettes[2] = 0x090088;
 	fractol->palettes[3] = 0xecfcff;
 	fractol->palettes[4] = 0x1e0411;
-	//fractol->palettes[4] = 0xff5200;
 	fractol->color = fractol->palettes[fractol->index];
 	fractol->realpart = 0.285;
 	fractol->impart = 0.01;
 	fractol->julia_mouse = 1;
 }
 
-void            start_values(t_fractol *fractol, char *title)
+void	start_values(t_fractol *fractol, char *title)
 {
 	fractol->img.width = 500;
 	fractol->img.height = 500;
