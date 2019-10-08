@@ -6,7 +6,7 @@
 /*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 19:51:51 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 09:52:47 by afonck           ###   ########.fr       */
+/*   Updated: 2019/10/08 14:51:28 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,22 +50,25 @@ void	keys_and_mouse(t_fractol *fractol)
 	mlx_mouse_hook(fractol->mlx.win_ptr, mouse_hook, fractol);
 }
 
+int	print_usage()
+{
+	ft_dprintf(2, "usage: ./fractol %{r}s %{g}s / %{g}s / %{g}s / %{g}s / %{g}s%{r}s\n",
+                        "[choice of fractal:", "julia", "mandelbrot", "burningship", "buffalo", "celtic_mandel", "]");
+	return (1);
+}
+
 int		main(int argc, char **argv)
 {
 	t_fractol	fractol;
 
 	if (argc != 2)
 	{
-		ft_dprintf(2, "usage: ./fractol %{b}s %{r}s / %{g}s / %{m}s%{b}s\n",
-			"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
-		return (1);
+		return (print_usage());
 	}
 	start_values(&fractol, argv[1]);
 	if (fractol.frac == 0)
 	{
-		ft_dprintf(2, "usage: ./fractol %{b}s %{r}s / %{g}s / %{m}s%{b}s\n",
-			"[choice of fractal:", "julia", "mandelbrot", "burningship", "]");
-		return (1);
+		return (print_usage());
 	}
 	init_mlx(&(fractol.mlx), argv[1]);
 	init_img(&(fractol.img), &(fractol.mlx));

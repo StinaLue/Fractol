@@ -6,7 +6,7 @@
 /*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 19:53:39 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/07 19:54:10 by afonck           ###   ########.fr       */
+/*   Updated: 2019/10/08 14:53:46 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void	outputfrac(t_fractol fractol)
 				0xFFFFFF, "BURNING SHIP");
 	else if (fractol.frac == BUFFALO)
 		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
-				0xFFFFFF, "BUFALLO");
+				0xFFFFFF, "BUFFALO");
 	else if (fractol.frac == CELTIC_MANDEL)
 		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 100, 10, \
 				0xFFFFFF, "CELTIC MANDELBROT");
@@ -53,13 +53,16 @@ void	outputcommands(t_fractol fractol)
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 110,
 			0xFFFFFF, "Reset: R | Hide menu: H");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 130,
-			0xFFFFFF, "Change fractal: 1/2/3/4");
+			0xFFFFFF, "Change fractal: 1/2/3/4/5");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 150,
 			0xFFFFFF, "Change img size: '[' / ']'");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 170,
 			0xFFFFFF, "Psychedelic mode: M");
 	mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 190,
 			0xFFFFFF, "Close the window: 'esc'");
+	if (fractol.frac == JULIA)
+		mlx_string_put(fractol.mlx.mlx_ptr, fractol.mlx.win_ptr, 10, 210,
+			0xFFFFFF, "Stop mouse movement: W");
 }
 
 void	menu(t_fractol fractol)
