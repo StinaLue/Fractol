@@ -6,7 +6,7 @@
 /*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 19:54:16 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/07 19:54:56 by afonck           ###   ########.fr       */
+/*   Updated: 2019/10/08 09:42:39 by afonck           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,10 @@
 void	zoom(int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
-	fractol->realstart = (x / fractol->zoom + fractol->realstart) - (x / (fractol->zoom * 1.3));
-	fractol->imstart = (y / fractol->zoom + fractol->imstart) - (y / (fractol->zoom * 1.3));
+	fractol->realstart = (x / fractol->zoom + fractol->realstart)
+		- (x / (fractol->zoom * 1.3));
+	fractol->imstart = (y / fractol->zoom + fractol->imstart)
+		- (y / (fractol->zoom * 1.3));
 	fractol->zoom *= 1.3;
 	multithread(*fractol);
 }
@@ -24,8 +26,10 @@ void	zoom(int x, int y, t_fractol *fractol)
 void	unzoom(int x, int y, t_fractol *fractol)
 {
 	destroy_and_clear(fractol);
-	fractol->realstart = (x / fractol->zoom + fractol->realstart) - (x / (fractol->zoom / 1.3));
-	fractol->imstart = (y / fractol->zoom + fractol->imstart) - (y / (fractol->zoom / 1.3));
+	fractol->realstart = (x / fractol->zoom + fractol->realstart)
+		- (x / (fractol->zoom / 1.3));
+	fractol->imstart = (y / fractol->zoom + fractol->imstart)
+		- (y / (fractol->zoom / 1.3));
 	fractol->zoom /= 1.3;
 	multithread(*fractol);
 }

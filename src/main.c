@@ -6,7 +6,7 @@
 /*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 19:51:51 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/07 19:53:27 by afonck           ###   ########.fr       */
+/*   Updated: 2019/10/08 09:52:47 by afonck           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int		key_press(int key, void *param)
 		complexchange(key, (t_fractol *)param);
 	else if (key == O || key == P)
 		itmaxchange(key, (t_fractol *)param);
-	else if	(key == N || key == M)
+	else if (key == N || key == M)
 		changecolor(key, (t_fractol *)param);
 	else if (key == R)
 		resetfrac(key, (t_fractol *)param);
