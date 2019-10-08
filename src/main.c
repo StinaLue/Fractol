@@ -6,7 +6,7 @@
 /*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 19:51:51 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 14:51:28 by sluetzen         ###   ########.fr       */
+/*   Updated: 2019/10/08 15:17:54 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,10 +50,11 @@ void	keys_and_mouse(t_fractol *fractol)
 	mlx_mouse_hook(fractol->mlx.win_ptr, mouse_hook, fractol);
 }
 
-int	print_usage()
+int		print_usage(void)
 {
-	ft_dprintf(2, "usage: ./fractol %{r}s %{g}s / %{g}s / %{g}s / %{g}s / %{g}s%{r}s\n",
-                        "[choice of fractal:", "julia", "mandelbrot", "burningship", "buffalo", "celtic_mandel", "]");
+	ft_dprintf(2, "usage: ./fractol %{r}s %{g}s / %{g}s / %{g}s / %{g}s \
+		/ %{g}s%{r}s\n", "[choice of fractal:", "julia", \
+		"mandelbrot", "burningship", "buffalo", "celtic_mandel", "]");
 	return (1);
 }
 

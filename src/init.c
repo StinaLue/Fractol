@@ -6,7 +6,7 @@
 /*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 18:15:28 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 14:54:53 by sluetzen         ###   ########.fr       */
+/*   Updated: 2019/10/08 15:17:38 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,8 @@ void	start_values(t_fractol *fractol, char *title)
 		fractol->frac = BURNING_SHIP;
 	else if (ft_strncmp(title, "buffalo", ft_strlen("buffalo")) == 0)
 		fractol->frac = BUFFALO;
-	else if (ft_strncmp(title, "celtic_mandel", ft_strlen("celtic_mandel")) == 0)
+	else if (ft_strncmp(title, "celtic_mandel",
+		ft_strlen("celtic_mandel")) == 0)
 		fractol->frac = CELTIC_MANDEL;
 	else
 		fractol->frac = 0;
