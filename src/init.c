@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/07 18:15:28 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 15:17:38 by sluetzen         ###   ########.fr       */
+/*   Created: 2019/10/07 18:15:28 by sluetzen          #+#    #+#             */
+/*   Updated: 2019/10/09 10:13:44 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,10 +48,30 @@ void	prepare_frac(t_fractol *fractol)
 	fractol->julia_mouse = 1;
 }
 
+void	bonus_values(t_fractol *fractol, char *title)
+{
+	if (ft_strncmp(title, "buffalo", ft_strlen("buffalo")) == 0)
+		fractol->frac = BUFFALO;
+	else if (ft_strncmp(title, "celtic_mandel",
+				ft_strlen("celtic_mandel")) == 0)
+		fractol->frac = CELTIC_MANDEL;
+	else if (ft_strncmp(title, "tricorn",
+				ft_strlen("tricorn")) == 0)
+		fractol->frac = TRICORN;
+	else if (ft_strncmp(title, "mandel_fourth",
+				ft_strlen("mandel_fourth")) == 0)
+		fractol->frac = MANDEL_FOURTH;
+	else if (ft_strncmp(title, "mandel_fifth",
+				ft_strlen("mandel_fifth")) == 0)
+		fractol->frac = MANDEL_FIFTH;
+	else
+		fractol->frac = 0;
+}
+
 void	start_values(t_fractol *fractol, char *title)
 {
-	fractol->img.width = 500;
-	fractol->img.height = 500;
+	fractol->img.width = 700;
+	fractol->img.height = 700;
 	prepare_frac(fractol);
 	if (ft_strncmp(title, "julia", ft_strlen("julia")) == 0)
 		fractol->frac = JULIA;
@@ -59,11 +79,6 @@ void	start_values(t_fractol *fractol, char *title)
 		fractol->frac = MANDELBROT;
 	else if (ft_strncmp(title, "burningship", ft_strlen("burningship")) == 0)
 		fractol->frac = BURNING_SHIP;
-	else if (ft_strncmp(title, "buffalo", ft_strlen("buffalo")) == 0)
-		fractol->frac = BUFFALO;
-	else if (ft_strncmp(title, "celtic_mandel",
-		ft_strlen("celtic_mandel")) == 0)
-		fractol->frac = CELTIC_MANDEL;
 	else
-		fractol->frac = 0;
+		bonus_values(fractol, title);
 }

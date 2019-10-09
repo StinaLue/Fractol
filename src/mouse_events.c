@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   mouse_events.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/07 19:54:16 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 09:42:39 by afonck           ###   ########.fr       */
+/*   Created: 2019/10/07 19:54:16 by sluetzen          #+#    #+#             */
+/*   Updated: 2019/10/08 14:13:14 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ int		mouse_julia(int x, int y, t_fractol *fractol)
 	return (0);
 }
 
-void	julia_trigger(int key, t_fractol *fractol)
+void	julia_stop_mouse(int key, t_fractol *fractol)
 {
 	(void)key;
 	if (fractol->frac == JULIA)

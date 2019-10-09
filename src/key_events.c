@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   key_events.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/07 19:49:10 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/07 19:51:21 by afonck           ###   ########.fr       */
+/*   Created: 2019/10/07 19:49:10 by sluetzen          #+#    #+#             */
+/*   Updated: 2019/10/09 10:14:44 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ void	changecolor(int key, t_fractol *fractol)
 	}
 	else if (key == M)
 	{
-		fractol->color += 10;
+		fractol->color += 7;
 	}
 	multithread(*fractol);
 }
@@ -76,5 +76,11 @@ void	choose_frac(int key, t_fractol *fractol)
 		fractol->frac = BUFFALO;
 	else if (key == 23)
 		fractol->frac = CELTIC_MANDEL;
+	else if (key == 22)
+		fractol->frac = TRICORN;
+	else if (key == 26)
+		fractol->frac = MANDEL_FOURTH;
+	else if (key == 28)
+		fractol->frac = MANDEL_FIFTH;
 	multithread(*fractol);
 }

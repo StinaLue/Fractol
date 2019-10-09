@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: afonck <marvin@42.fr>                      +#+  +:+       +#+         #
+#    By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2019/03/27 13:47:31 by afonck            #+#    #+#              #
-#    Updated: 2019/03/29 11:07:15 by sluetzen         ###   ########.fr        #
+#    Created: 2019/03/27 13:47:31 by sluetzen          #+#    #+#              #
+#    Updated: 2019/10/09 10:10:04 by sluetzen         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -40,7 +40,8 @@ SOURCES_LIST = main.c \
 	       image_handler.c \
 	       mouse_events.c \
 	       key_events.c \
-	       utils.c
+	       utils.c \
+		   bonus_fractals.c
 
 SOURCES = $(addprefix $(SOURCES_DIRECTORY), $(SOURCES_LIST))
 

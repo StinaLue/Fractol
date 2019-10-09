@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/07 19:51:51 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 15:17:54 by sluetzen         ###   ########.fr       */
+/*   Created: 2019/10/07 19:51:51 by sluetzen          #+#    #+#             */
+/*   Updated: 2019/10/09 10:27:00 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@ void	close_window(t_fractol *fractol)
 int		key_press(int key, void *param)
 {
 	if (key == W)
-		julia_trigger(key, (t_fractol *)param);
-	else if (key >= 18 && key <= 25)
+		julia_stop_mouse(key, (t_fractol *)param);
+	else if ((key >= 18 && key <= 23) || key == 26 || key == 28)
 		choose_frac(key, (t_fractol *)param);
 	else if (key == ARROW_LEFT || key == ARROW_RIGHT || key == ARROW_UP
 		|| key == ARROW_DOWN)
@@ -52,9 +52,11 @@ void	keys_and_mouse(t_fractol *fractol)
 
 int		print_usage(void)
 {
-	ft_dprintf(2, "usage: ./fractol %{r}s %{g}s / %{g}s / %{g}s / %{g}s \
-		/ %{g}s%{r}s\n", "[choice of fractal:", "julia", \
-		"mandelbrot", "burningship", "buffalo", "celtic_mandel", "]");
+	ft_dprintf(2, "usage: ./fractol %{r}s %{g}s / %{g}s",
+	"[choice of fractal:", "julia", "mandelbrot / ");
+	ft_dprintf(2, "%{g}s / %{g}s / %{g}s / %{g}s / %{g}s / %{g}s%{r}s\n", \
+	"burningship", "buffalo", "celtic_mandel", "tricorn", "mandel_fourth", \
+	"mandel_fifth", "]");
 	return (1);
 }
 
@@ -63,14 +65,10 @@ int		main(int argc, char **argv)
 	t_fractol	fractol;
 
 	if (argc != 2)
-	{
 		return (print_usage());
-	}
 	start_values(&fractol, argv[1]);
 	if (fractol.frac == 0)
-	{
 		return (print_usage());
-	}
 	init_mlx(&(fractol.mlx), argv[1]);
 	init_img(&(fractol.img), &(fractol.mlx));
 	multithread(fractol);

@@ -3,15 +3,29 @@
 /*                                                        :::      ::::::::   */
 /*   multithread_trace.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/10/07 19:55:05 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/08 09:45:49 by afonck           ###   ########.fr       */
+/*   Created: 2019/10/07 19:55:05 by sluetzen          #+#    #+#             */
+/*   Updated: 2019/10/09 10:09:06 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 #include <pthread.h>
+
+void	bonus_frac(int i, int j, t_fractol fractol)
+{
+	if (fractol.frac == BUFFALO)
+		buffalo(i, j, fractol);
+	else if (fractol.frac == CELTIC_MANDEL)
+		celticmandel(i, j, fractol);
+	else if (fractol.frac == TRICORN)
+		tricorn(i, j, fractol);
+	else if (fractol.frac == MANDEL_FOURTH)
+		mandelbrot_fourth(i, j, fractol);
+	else if (fractol.frac == MANDEL_FIFTH)
+		mandelbrot_fifth(i, j, fractol);
+}
 
 void	calc_frac(int i, int j, t_fractol fractol)
 {
@@ -21,10 +35,8 @@ void	calc_frac(int i, int j, t_fractol fractol)
 		mandelbrot(i, j, fractol);
 	else if (fractol.frac == BURNING_SHIP)
 		burningship(i, j, fractol);
-	else if (fractol.frac == BUFFALO)
-		buffalo(i, j, fractol);
-	else if (fractol.frac == CELTIC_MANDEL)
-		celticmandel(i, j, fractol);
+	else
+		bonus_frac(i, j, fractol);
 }
 
 void	*trace_fractal(void *fractol)

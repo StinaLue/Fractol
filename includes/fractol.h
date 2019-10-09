@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   fractol.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afonck <afonck@student.42.fr>              +#+  +:+       +#+        */
+/*   By: sluetzen <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/10/07 17:11:58 by afonck            #+#    #+#             */
-/*   Updated: 2019/10/07 17:57:34 by afonck           ###   ########.fr       */
+/*   Updated: 2019/10/09 10:16:45 by sluetzen         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,10 @@
 # define BURNING_SHIP 3
 # define BUFFALO 4
 # define CELTIC_MANDEL 5
-# define NB_THREADS 100
+# define TRICORN 6
+# define MANDEL_FOURTH 7
+# define MANDEL_FIFTH 8
+# define NB_THREADS 50
 
 typedef struct		s_img
 {
@@ -82,6 +85,12 @@ int					burningship(int i, int j, t_fractol fractol);
 
 int					celticmandel(int i, int j, t_fractol fractol);
 
+int					tricorn(int i, int j, t_fractol fractol);
+
+int					mandelbrot_fourth(int i, int j, t_fractol fractol);
+
+int					mandelbrot_fifth(int i, int j, t_fractol fractol);
+
 /*
 ** MULTITHREAD TRACING
 */
@@ -117,7 +126,7 @@ int					mouse_hook(int mousecode, int x, int y,
 
 int					mouse_julia(int x, int y, t_fractol *fractol);
 
-void				julia_trigger(int key, t_fractol *fractol);
+void				julia_stop_mouse(int key, t_fractol *fractol);
 
 /*
 ** KEY EVENTS
